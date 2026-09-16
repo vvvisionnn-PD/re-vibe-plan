@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/* ── 디자인 토큰 ────────────────────────────────────────────── */
+:root {
+  --background: #f6f7f9;
+  --surface: #ffffff;
+  --surface-alt: #f1f3f6;
+  --border: #dfe3e8;
+  --border-strong: #c4cad2;
+  --foreground: #16191d;
+  --muted: #667085;
+  --accent: #1d4ed8;
+  --accent-soft: #e8efff;
+  --positive: #0f7b4f;
+  --negative: #b42318;
+  --warning: #b54708;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0d1014;
+    --surface: #161a20;
+    --surface-alt: #1d222a;
+    --border: #2a313b;
+    --border-strong: #3b4552;
+    --foreground: #e8eaee;
+    --muted: #98a2b3;
+    --accent: #7ba2ff;
+    --accent-soft: #1b2740;
+    --positive: #4ade80;
+    --negative: #f87171;
+    --warning: #fbbf24;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+  --color-warning: var(--warning);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    var(--font-geist-sans), "Pretendard", "Apple SD Gothic Neo",
+    "Malgun Gothic", "맑은 고딕", system-ui, sans-serif;
+  font-feature-settings: "tnum" 1;
+}
+
+/* 수치는 항상 등폭·고정폭 숫자로 — 표에서 자릿수가 흔들리지 않게 */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 숫자 입력의 스피너 제거 (단위가 만원/평이라 1씩 증감이 무의미) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ── 인쇄 (사업계획서 출력) ─────────────────────────────────── */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm 12mm;
+  }
+
+  :root {
+    --background: #ffffff;
+    --surface: #ffffff;
+    --surface-alt: #f4f4f5;
+    --border: #cbd0d6;
+    --border-strong: #9aa2ad;
+    --foreground: #000000;
+    --muted: #4a5260;
+    --accent: #1d4ed8;
+    --accent-soft: #eef3ff;
+    --positive: #0f7b4f;
+    --negative: #b42318;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-block {
+    break-inside: avoid;
+  }
+
+  .print-page-break {
+    break-before: page;
+  }
+
+  body {
+    background: #ffffff;
+    font-size: 10pt;
+  }
+}
