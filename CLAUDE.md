@@ -14,7 +14,9 @@
   - 6장 리스크 문장의 숫자는 모두 `riskMetrics` · 한계선에서 나온다. 근거 없는 숫자를 넣지 않는다.
 - [x] 표시 규칙: 자료 없음 · 지표 옆 계산식 · 천단위 콤마 · 음수 빨강 · 모바일 1열 · 인쇄 A4 (헤드리스 Edge PDF로 확인)
 - [x] 실습 7: 2장 시장 분석 — 사업대상지 기준 공공데이터 (아래 "시장 분석 구조")
-- [ ] GitHub CLI(`gh`)로 올리고 Vercel로 배포
+- [x] GitHub(private: vvvisionnn-PD/biz-plan-lender) · Vercel 배포 — https://biz-plan-lender.vercel.app
+  - Vercel 환경변수 `DATA_GO_KR_KEY` 등록 완료. 배포별 URL(…-hajs1.vercel.app)은 Vercel 배포 보호가 걸려 로그인 없이 열리지 않는다 — 공유는 대표 도메인으로.
+  - 대외비 사업장 자료(`new-IM/`)와 `_archive/`, `.env*`는 저장소에서 제외한다.
 - 이전 버전(범용 수지 계산기)은 `_archive/v1/`에 보관 중. 빌드·타입 검사·lint에서 제외되어 있다.
 
 ## 구조
