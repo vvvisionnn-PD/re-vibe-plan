@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import {
   cashBreakdown,
   cashWaterfall,
@@ -51,6 +51,7 @@ import {
   type TableMeta,
 } from "@/lib/market";
 import { CANCELLED, createQueue, type Queue } from "@/lib/queue";
+import { planFromHash, shareUrl } from "@/lib/share";
 import CashWaterfallChart from "./charts/CashWaterfallChart";
 import MarketMarginChart from "./charts/MarketMarginChart";
 
@@ -1290,8 +1291,28 @@ function useMarketRun() {
 
 
 /** 입력 · 결과 화면 */
+/** 주소의 해시를 구독한다 (링크로 공유된 입력값을 읽기 위해) */
+function useHash(): string {
+  return useSyncExternalStore(
+    (onChange) => {
+      window.addEventListener("hashchange", onChange);
+      return () => window.removeEventListener("hashchange", onChange);
+    },
+    () => window.location.hash,
+    () => "",
+  );
+}
+
 export default function PlanApp() {
-  const [input, setInput] = useState<PlanInput>(emptyInput);
+  const hash = useHash();
+  // 링크로 열었으면 그 값으로 시작한다. 해시가 바뀌면 화면도 다시 만든다(key).
+  const shared = useMemo(() => planFromHash(hash), [hash]);
+  return <Editor key={hash} initial={shared} />;
+}
+
+/** 입력 · 결과 화면 본체 */
+function Editor({ initial }: { initial: PlanInput | null }) {
+  const [input, setInput] = useState<PlanInput>(() => initial ?? emptyInput());
   // 임시 값 적용 · 초기화 때 입력칸 내부 상태를 새로 만들기 위한 키
   const [formKey, setFormKey] = useState(0);
 
@@ -1339,6 +1360,23 @@ export default function PlanApp() {
               onClick={() => area && market.start(area)}
             >
               사업계획서 만들기
+            </button>
+            <button
+              type="button"
+              className={buttonClass}
+              title="지금 입력값이 담긴 링크를 복사합니다 (값은 주소의 # 뒤에 담겨 서버로 전송되지 않습니다)"
+              onClick={async () => {
+                const url = shareUrl(window.location.href, input);
+                window.history.replaceState(null, "", url);
+                try {
+                  await navigator.clipboard.writeText(url);
+                  alert("링크를 복사했습니다. 이 링크를 여는 사람은 같은 입력값을 보게 됩니다.");
+                } catch {
+                  prompt("아래 링크를 복사하세요", url);
+                }
+              }}
+            >
+              링크 복사
             </button>
             <button type="button" className={buttonClass} onClick={() => window.print()}>
               인쇄 · PDF
